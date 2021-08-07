@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2021
+# Daniela Cervantes <dace@odoo.com>, 2021
+# Lucia Pacheco <lpo@odoo.com>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # 
 msgid ""
@@ -47,7 +49,7 @@ msgstr "'Evento de registro %s' % (object.name or 'Attendee').replace('/','')"
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr "( <i class=\"fa fa-clock-o\" aria-label=\"Periodo\" role=\"img\" title=\"Periodo\"/>"
+msgstr "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_2
@@ -2121,7 +2123,7 @@ msgstr "Experimenta música en vivo, comida local y bebidas."
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
 msgid "Folded in Kanban"
-msgstr "Doblado en Kanban"
+msgstr "Plegado en Kanban"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_follower_ids
@@ -3570,7 +3572,7 @@ msgstr "Activador"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_type
 msgid "Trigger "
-msgstr "Desencadenar "
+msgstr "Activador"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_3

@@ -29,9 +29,10 @@ class StockMoveLine(models.Model):
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_qty = fields.Float(
-        'Real Reserved Quantity', digits=0,
+        'Real Reserved Quantity', digits=0, copy=False,
         compute='_compute_product_qty', inverse='_set_product_qty', store=True)
-    product_uom_qty = fields.Float('Reserved', default=0.0, digits='Product Unit of Measure', required=True)
+    product_uom_qty = fields.Float(
+        'Reserved', default=0.0, digits='Product Unit of Measure', required=True, copy=False)
     qty_done = fields.Float('Done', default=0.0, digits='Product Unit of Measure', copy=False)
     package_id = fields.Many2one(
         'stock.quant.package', 'Source Package', ondelete='restrict',
@@ -448,17 +449,14 @@ class StockMoveLine(models.Model):
                             # If a picking type is linked, we may have to create a production lot on
                             # the fly before assigning it to the move line if the user checked both
                             # `use_create_lots` and `use_existing_lots`.
-                            if ml.lot_name:
-                                if ml.product_id.tracking == 'lot' and not ml.lot_id:
-                                    lot = self.env['stock.production.lot'].search([
-                                        ('company_id', '=', ml.company_id.id),
-                                        ('product_id', '=', ml.product_id.id),
-                                        ('name', '=', ml.lot_name),
-                                    ], limit=1)
-                                    if lot:
-                                        ml.lot_id = lot.id
-                                    else:
-                                        ml_ids_to_create_lot.add(ml.id)
+                            if ml.lot_name and not ml.lot_id:
+                                lot = self.env['stock.production.lot'].search([
+                                    ('company_id', '=', ml.company_id.id),
+                                    ('product_id', '=', ml.product_id.id),
+                                    ('name', '=', ml.lot_name),
+                                ], limit=1)
+                                if lot:
+                                    ml.lot_id = lot.id
                                 else:
                                     ml_ids_to_create_lot.add(ml.id)
                         elif not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots:

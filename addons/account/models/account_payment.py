@@ -113,7 +113,7 @@ class AccountPayment(models.Model):
         help="Invoices whose journal items have been reconciled with these payments.")
     reconciled_bills_count = fields.Integer(string="# Reconciled Bills",
         compute="_compute_stat_buttons_from_reconciliation")
-    reconciled_statement_ids = fields.Many2many('account.move', string="Reconciled Statements",
+    reconciled_statement_ids = fields.Many2many('account.bank.statement', string="Reconciled Statements",
         compute='_compute_stat_buttons_from_reconciliation',
         help="Statements matched to this payment")
     reconciled_statements_count = fields.Integer(string="# Reconciled Statements",
@@ -330,7 +330,8 @@ class AccountPayment(models.Model):
         for pay in self:
             available_partner_bank_accounts = pay.partner_id.bank_ids.filtered(lambda x: x.company_id in (False, pay.company_id))
             if available_partner_bank_accounts:
-                pay.partner_bank_id = available_partner_bank_accounts[0]._origin
+                if pay.partner_bank_id not in available_partner_bank_accounts:
+                    pay.partner_bank_id = available_partner_bank_accounts[0]._origin
             else:
                 pay.partner_bank_id = False
 

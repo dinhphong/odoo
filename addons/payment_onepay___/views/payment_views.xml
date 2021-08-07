@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="acquirer_form_onepay" model="ir.ui.view">
+            <field name="name">acquirer.form.onepay</field>
+            <field name="model">payment.acquirer</field>
+            <field name="inherit_id" ref="payment.acquirer_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//group[@name="acquirer"]' position='inside'>
+                    <group attrs="{'invisible': [('provider', '!=', 'onepay')]}">
+                        <field name="onepay_merchant_account" attrs="{'required':[('provider', '=', 'onepay'), ('state', '!=', 'disabled')]}"/>
+                        <field name="onepay_skin_code" attrs="{'required':[('provider', '=', 'onepay'), ('state', '!=', 'disabled')]}"/>
+                        <field name="onepay_skin_hmac_key" attrs="{'required':[('provider', '=', 'onepay'), ('state', '!=', 'disabled')]}"/>
+                        <a colspan="2" href="https://www.onepay.com/" target="_blank">How to configure your Onepay account?</a>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

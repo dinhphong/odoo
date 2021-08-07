@@ -1,0 +1,177 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_onepay_cc
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Ermin Trevisan <trevi@twanda.com>, 2020
+# Chris Egal <sodaswed@web.de>, 2021
+# Andreas Schmidt <schmigo@gmail.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Andreas Schmidt <schmigo@gmail.com>, 2021\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_onepay_cc
+#: model_terms:ir.ui.view,arch_db:payment_onepay_cc.mail_template_onepay_cc_invite_user_to_configure
+msgid ""
+"<br/><br/>\n"
+"                Thanks,<br/>\n"
+"                <b>The Odoo Team</b>"
+msgstr ""
+"<br/><br/>\n"
+"                Danke,<br/>\n"
+"                <b>Das Odoo-Team</b>"
+
+#. module: payment_onepay_cc
+#: code:addons/payment_onepay_cc/models/payment.py:0
+#, python-format
+msgid "Add your Onepay account to Odoo"
+msgstr "Fügen Sie Ihr Onepay-Konto zu Odoo hinzu"
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_acquirer__onepay_cc_email_account
+msgid "Email"
+msgstr "E-Mail"
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_acquirer__fees_dom_fixed
+msgid "Fixed domestic fees"
+msgstr "Feste Gebühren für Inlandsverkäufe"
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_acquirer__fees_int_fixed
+msgid "Fixed international fees"
+msgstr "Feste Gebühren für internationale Verkäufe"
+
+#. module: payment_onepay_cc
+#: model_terms:ir.ui.view,arch_db:payment_onepay_cc.mail_template_onepay_cc_invite_user_to_configure
+msgid ""
+"Hello,\n"
+"                <br/><br/>\n"
+"                You have received a payment through OnePay.<br/>\n"
+"                Kindly follow the instructions given by OnePay to create your account.<br/>\n"
+"                Then, help us complete your Onepay credentials in Odoo.<br/><br/>"
+msgstr ""
+"Guten Tag\n"
+"                <br/><br/>\n"
+"                Sie haben eine Zahlung von Onepay erhalten.<br/>\n"
+"                Bitte folgen Sie den Anweisungen von Onepay, um Ihr Konto zu konfigurieren.<br/>\n"
+"                Anschließend helfen Sie uns, Ihre Anmeldeinformation für Onepay in Odoo zu vervollständigen.<br/><br/>"
+
+#. module: payment_onepay_cc
+#: model_terms:ir.ui.view,arch_db:payment_onepay_cc.acquirer_form_onepay_cc
+msgid "How to configure your onepay_cc account?"
+msgstr "Wie kann ich mein Onepay Konto konfigurieren?"
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Zuletzt geändert am"
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_acquirer__onepay_cc_seller_account
+msgid "Merchant Account ID"
+msgstr "Verkäufer Account ID"
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_acquirer__onepay_cc_access_code
+msgid "Access Code"
+msgstr "PDT-Identitäts-Token"
+
+#. module: payment_onepay_cc
+#: model:ir.model,name:payment_onepay_cc.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Zahlungsanbieter"
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,help:payment_onepay_cc.field_payment_acquirer__onepay_cc_access_code
+msgid ""
+"Payment Data Transfer allows you to receive notification of successful "
+"payments as they are made."
+msgstr ""
+"Der Zahlungsdaten-Transfer ermöglicht es Ihnen, Benachrichtigungen für "
+"erfolgreiche Zahlungen zu erhalten."
+
+#. module: payment_onepay_cc
+#: model:ir.model,name:payment_onepay_cc.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Zahlungstransaktion"
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields.selection,name:payment_onepay_cc.selection__payment_acquirer__provider__onepay_cc
+msgid "Onepay"
+msgstr "Onepay"
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,help:payment_onepay_cc.field_payment_acquirer__onepay_cc_use_ipn
+msgid "Onepay Instant Payment Notification"
+msgstr "Sofortige Zahlungsbestätigung von Onepay"
+
+#. module: payment_onepay_cc
+#: code:addons/payment_onepay_cc/models/payment.py:0
+#, python-format
+msgid "ONEPAY CC: received data with missing reference (%s) or txn_id (%s)"
+msgstr "ONEPAY CC: Daten mit fehlender Referenz (%s) oder txn_id (%s) erhalten."
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Anbieter"
+
+#. module: payment_onepay_cc
+#: model_terms:ir.ui.view,arch_db:payment_onepay_cc.mail_template_onepay_cc_invite_user_to_configure
+msgid "Set Onepay credentials"
+msgstr "Onepay-Anmeldeinformationen festlegen"
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,help:payment_onepay_cc.field_payment_acquirer__onepay_cc_seller_account
+msgid ""
+"The Merchant ID is used to ensure communications coming from Onepay are "
+"valid and secured."
+msgstr ""
+"Die Händler-ID stellt sicher, daß die eingehenden Nachrichten von Onepay "
+"gültig und sicher sind."
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_transaction__onepay_cc_txn_type
+msgid "Transaction type"
+msgstr "Transaktions-Typ"
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_acquirer__onepay_cc_use_ipn
+msgid "Use IPN"
+msgstr "Benutze IPN"
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_acquirer__fees_dom_var
+msgid "Variable domestic fees (in percents)"
+msgstr "Variable Inlands-Gebühren (in Prozent)"
+
+#. module: payment_onepay_cc
+#: model:ir.model.fields,field_description:payment_onepay_cc.field_payment_acquirer__fees_int_var
+msgid "Variable international fees (in percents)"
+msgstr "Variable Auslands-Gebühren (in Prozent)"

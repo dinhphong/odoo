@@ -20,7 +20,7 @@
 {
     'name': 'OnePAY Payment Acquirer',
     'category': 'Accounting/Payment Acquirers',
-    'sequence': 368,
+    'sequence': 365,
     'summary': 'Payment Acquirer: OnePAY Implementation',
     'version': '1.0',
     'description': """OnePAY Payment Acquirer""",
@@ -36,6 +36,6 @@
     'post_init_hook': 'create_missing_journal_for_acquirers',
     'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
-    'price': 99.99,
+    'price': 120.00,
     'currency': 'USD',
 }

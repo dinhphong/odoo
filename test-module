@@ -1,0 +1,5 @@
+ ./odoo-bin \
+    -c mac/test.conf \
+    -i intro_to_testing\
+    --test-enable \
+    --stop-after-init

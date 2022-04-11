@@ -480,7 +480,9 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # copy attributes from field to self (string, help, etc.)
         for attr, prop in self.related_attrs:
-            if not getattr(self, attr):
+            # check whether 'attr' is explicitly set on self (from its field
+            # definition), and ignore its class-level value (only a default)
+            if attr not in self.__dict__:
                 setattr(self, attr, getattr(field, prop))
 
         for attr, value in field.__dict__.items():
@@ -2427,7 +2429,7 @@ class Reference(Selection):
     """ Pseudo-relational field (no FK in database).
 
     The field value is stored as a :class:`string <str>` following the pattern
-    ``"res_model.res_id"`` in database.
+    ``"res_model,res_id"`` in database.
     """
     type = 'reference'
 
@@ -3184,7 +3186,7 @@ class One2many(_RelationalMulti):
             inverse = self.inverse_name
             to_create = []                  # line vals to create
             to_delete = []                  # line ids to delete
-            to_inverse = {}
+            to_link = defaultdict(set)      # {record: line_ids}
             allow_full_delete = not create
 
             def unlink(lines):
@@ -3194,6 +3196,8 @@ class One2many(_RelationalMulti):
                     lines[inverse] = False
 
             def flush():
+                if to_link:
+                    before = {record: record[self.name] for record in to_link}
                 if to_delete:
                     # unlink() will remove the lines from the cache
                     comodel.browse(to_delete).unlink()
@@ -3202,11 +3206,13 @@ class One2many(_RelationalMulti):
                     # create() will add the new lines to the cache of records
                     comodel.create(to_create)
                     to_create.clear()
-                if to_inverse:
-                    for record, inverse_ids in to_inverse.items():
-                        lines = comodel.browse(inverse_ids)
-                        lines = lines.filtered(lambda line: int(line[inverse]) != record.id)
+                if to_link:
+                    for record, line_ids in to_link.items():
+                        lines = comodel.browse(line_ids) - before[record]
+                        # linking missing lines should fail
+                        lines.mapped(inverse)
                         lines[inverse] = record
+                    to_link.clear()
 
             for recs, commands in records_commands_list:
                 for command in (commands or ()):
@@ -3221,7 +3227,7 @@ class One2many(_RelationalMulti):
                     elif command[0] == 3:
                         unlink(comodel.browse(command[1]))
                     elif command[0] == 4:
-                        to_inverse.setdefault(recs[-1], set()).add(command[1])
+                        to_link[recs[-1]].add(command[1])
                         allow_full_delete = False
                     elif command[0] in (5, 6) :
                         # do not try to delete anything in creation mode if nothing has been created before
@@ -3398,7 +3404,7 @@ class Many2many(_RelationalMulti):
     column2 = None                      # column of table referring to comodel
     auto_join = False                   # whether joins are generated upon search
     limit = None                        # optional limit to use upon read
-    ondelete = None                     # optional ondelete for the column2 fkey
+    ondelete = 'cascade'                # optional ondelete for the column2 fkey
 
     def __init__(self, comodel_name=Default, relation=Default, column1=Default,
                  column2=Default, string=Default, **kwargs):
@@ -3413,17 +3419,15 @@ class Many2many(_RelationalMulti):
 
     def _setup_regular_base(self, model):
         super(Many2many, self)._setup_regular_base(model)
-        # 3 cases:
-        # 1) The ondelete attribute is not defined, we assign it a sensible default
-        # 2) The ondelete attribute is defined and its definition makes sense
-        # 3) The ondelete attribute is explicitly defined as 'set null' for a m2m,
+        # 2 cases:
+        # 1) The ondelete attribute is defined and its definition makes sense
+        # 2) The ondelete attribute is explicitly defined as 'set null' for a m2m,
         #    this is considered a programming error.
-        self.ondelete = self.ondelete or 'cascade'
-        if self.ondelete == 'set null':
+        if self.ondelete not in ('cascade', 'restrict'):
             raise ValueError(
                 "The m2m field %s of model %s declares its ondelete policy "
-                "as being 'set null'. Only 'restrict' and 'cascade' make sense."
-                % (self.name, model._name)
+                "as being %r. Only 'restrict' and 'cascade' make sense."
+                % (self.name, model._name, self.ondelete)
             )
         if self.store:
             if not (self.relation and self.column1 and self.column2):
@@ -3491,6 +3495,8 @@ class Many2many(_RelationalMulti):
             """.format(rel=self.relation, id1=self.column1, id2=self.column2)
             cr.execute(query, ['RELATION BETWEEN %s AND %s' % (model._table, comodel._table)])
             _schema.debug("Create table %r: m2m relation between %r and %r", self.relation, model._table, comodel._table)
+            model.pool.post_init(self.update_db_foreign_keys, model)
+            return True
 
         model.pool.post_init(self.update_db_foreign_keys, model)
 
@@ -3543,13 +3549,14 @@ class Many2many(_RelationalMulti):
         if not records_commands_list:
             return
 
-        comodel = records_commands_list[0][0].env[self.comodel_name].with_context(**self.context)
-        cr = records_commands_list[0][0].env.cr
+        model = records_commands_list[0][0].browse()
+        comodel = model.env[self.comodel_name].with_context(**self.context)
+        cr = model.env.cr
 
         # determine old and new relation {x: ys}
         set = OrderedSet
         ids = {rid for recs, cs in records_commands_list for rid in recs.ids}
-        records = records_commands_list[0][0].browse(ids)
+        records = model.browse(ids)
 
         if self.store:
             # Using `record[self.name]` generates 2 SQL queries when the value
@@ -3560,13 +3567,9 @@ class Many2many(_RelationalMulti):
             if missing_ids:
                 self.read(records.browse(missing_ids))
 
+        # determine new relation {x: ys}
         old_relation = {record.id: set(record[self.name]._ids) for record in records}
         new_relation = {x: set(ys) for x, ys in old_relation.items()}
-
-        # determine new relation {x: ys}
-        new_relation = defaultdict(set)
-        for x, ys in old_relation.items():
-            new_relation[x] = set(ys)
 
         # operations on new relation
         def relation_add(xs, y):

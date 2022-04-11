@@ -207,16 +207,16 @@ class AccountBankStatement(models.Model):
             # will find the record itself, so we have to add a condition in the search to ignore self.id
             if not isinstance(st.id, models.NewId):
                 domain.extend(['|', '&', ('id', '<', st.id), ('date', '=', st.date), '&', ('id', '!=', st.id), ('date', '!=', st.date)])
-            previous_statement = self.search(domain, limit=1)
+            previous_statement = self.search(domain, limit=1, order='date desc, id desc')
             st.previous_statement_id = previous_statement.id
 
     name = fields.Char(string='Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True)
     reference = fields.Char(string='External Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True, help="Used to hold the reference of the external mean that created this statement (name of imported file, reference of online synchronization...)")
     date = fields.Date(required=True, states={'confirm': [('readonly', True)]}, index=True, copy=False, default=fields.Date.context_today)
     date_done = fields.Datetime(string="Closed On")
-    balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, compute='_compute_starting_balance', readonly=False, store=True)
-    balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]}, compute='_compute_ending_balance', readonly=False, store=True)
-    state = fields.Selection(string='Status', required=True, readonly=True, copy=False, selection=[
+    balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, compute='_compute_starting_balance', readonly=False, store=True, tracking=True)
+    balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]}, compute='_compute_ending_balance', readonly=False, store=True, tracking=True)
+    state = fields.Selection(string='Status', required=True, readonly=True, copy=False, tracking=True, selection=[
             ('open', 'New'),
             ('posted', 'Processing'),
             ('confirm', 'Validated'),
@@ -507,6 +507,7 @@ class AccountBankStatementLine(models.Model):
     # == Business fields ==
     move_id = fields.Many2one(
         comodel_name='account.move',
+        auto_join=True,
         string='Journal Entry', required=True, readonly=True, ondelete='cascade',
         check_company=True)
     statement_id = fields.Many2one(
@@ -584,7 +585,7 @@ class AccountBankStatementLine(models.Model):
         statement = self.statement_id
         journal = statement.journal_id
         company_currency = journal.company_id.currency_id
-        journal_currency = journal.currency_id if journal.currency_id != company_currency else False
+        journal_currency = journal.currency_id or company_currency
 
         if self.foreign_currency_id and journal_currency:
             currency_id = journal_currency.id
@@ -714,7 +715,7 @@ class AccountBankStatementLine(models.Model):
             **counterpart_vals,
             'name': counterpart_vals.get('name', move_line.name if move_line else ''),
             'move_id': self.move_id.id,
-            'partner_id': self.partner_id.id or (move_line.partner_id.id if move_line else False),
+            'partner_id': self.partner_id.id or counterpart_vals.get('partner_id', move_line.partner_id.id if move_line else False),
             'currency_id': currency_id,
             'account_id': counterpart_vals.get('account_id', move_line.account_id.id if move_line else False),
             'debit': balance if balance > 0.0 else 0.0,
@@ -1268,8 +1269,8 @@ class AccountBankStatementLine(models.Model):
         if not self.partner_id:
             rec_overview_partners = set(overview['counterpart_line'].partner_id.id
                                         for overview in reconciliation_overview
-                                        if overview.get('counterpart_line') and overview['counterpart_line'].partner_id)
-            if len(rec_overview_partners) == 1:
+                                        if overview.get('counterpart_line'))
+            if len(rec_overview_partners) == 1 and rec_overview_partners != {False}:
                 self.line_ids.write({'partner_id': rec_overview_partners.pop()})
 
         # Refresh analytic lines.

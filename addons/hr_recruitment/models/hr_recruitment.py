@@ -120,7 +120,7 @@ class Applicant(models.Model):
     date_open = fields.Datetime("Assigned", readonly=True, index=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
-    job_id = fields.Many2one('hr.job', "Applied Job", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True)
+    job_id = fields.Many2one('hr.job', "Applied Job", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True, index=True)
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", tracking=True)
     salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", tracking=True)
     salary_proposed = fields.Float("Proposed Salary", group_operator="avg", help="Salary Proposed by the Organisation", tracking=True)
@@ -420,6 +420,9 @@ class Applicant(models.Model):
         # want the gateway user to be responsible if no other responsible is
         # found.
         self = self.with_context(default_user_id=False)
+        stage = False
+        if custom_values and 'job_id' in custom_values:
+            stage = self.env['hr.job'].browse(custom_values['job_id'])._get_first_stage()
         val = msg.get('from').split('<')[0]
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
@@ -429,6 +432,8 @@ class Applicant(models.Model):
         }
         if msg.get('priority'):
             defaults['priority'] = msg.get('priority')
+        if stage and stage.id:
+            defaults['stage_id'] = stage.id
         if custom_values:
             defaults.update(custom_values)
         return super(Applicant, self).message_new(msg, custom_values=defaults)
@@ -478,7 +483,7 @@ class Applicant(models.Model):
                     'default_name': applicant.partner_name or contact_name,
                     'default_job_id': applicant.job_id.id,
                     'default_job_title': applicant.job_id.name,
-                    'address_home_id': address_id,
+                    'default_address_home_id': address_id,
                     'default_department_id': applicant.department_id.id or False,
                     'default_address_id': applicant.company_id and applicant.company_id.partner_id
                             and applicant.company_id.partner_id.id or False,

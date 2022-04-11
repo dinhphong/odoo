@@ -333,7 +333,7 @@ class MailThread(models.AbstractModel):
             return True
         # discard pending tracking
         self._discard_tracking()
-        self.env['mail.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids)]).sudo().unlink()
+        self.env['mail.message'].sudo().search([('model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
         res = super(MailThread, self).unlink()
         self.env['mail.followers'].sudo().search(
             [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
@@ -1221,8 +1221,8 @@ class MailThread(models.AbstractModel):
         Indeed those aspects should be covered by the html_sanitize method
         located in tools. """
         body, attachments = payload_dict['body'], payload_dict['attachments']
-        if not body:
-            return payload_dict
+        if not body.strip():
+            return {'body': body, 'attachments': attachments}
         try:
             root = lxml.html.fromstring(body)
         except ValueError:
@@ -1343,7 +1343,9 @@ class MailThread(models.AbstractModel):
         if dsn_part and len(dsn_part.get_payload()) > 1:
             dsn = dsn_part.get_payload()[1]
             final_recipient_data = tools.decode_message_header(dsn, 'Final-Recipient')
-            bounced_email = tools.email_normalize(final_recipient_data.split(';', 1)[1].strip())
+            # old servers may hold void or invalid Final-Recipient header
+            if final_recipient_data and ";" in final_recipient_data:
+                bounced_email = tools.email_normalize(final_recipient_data.split(';', 1)[1].strip())
             if bounced_email:
                 bounced_partner = self.env['res.partner'].sudo().search([('email_normalized', '=', bounced_email)])
 
@@ -1557,8 +1559,11 @@ class MailThread(models.AbstractModel):
         """
         # find normalized emails and exclude aliases (to avoid subscribing alias emails to records)
         normalized_email = tools.email_normalize(email)
+        if not normalized_email:
+            return self.env['res.users']
+
         catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
-        if normalized_email and catchall_domain:
+        if catchall_domain:
             left_part = normalized_email.split('@')[0] if normalized_email.split('@')[1] == catchall_domain.lower() else False
             if left_part:
                 if self.env['mail.alias'].sudo().search_count([('alias_name', '=', left_part)]):
@@ -1593,7 +1598,7 @@ class MailThread(models.AbstractModel):
         return matching_user
 
     @api.model
-    def _mail_find_partner_from_emails(self, emails, records=None, force_create=False):
+    def _mail_find_partner_from_emails(self, emails, records=None, force_create=False, extra_domain=False):
         """ Utility method to find partners from email addresses. If no partner is
         found, create new partners if force_create is enabled. Search heuristics
 
@@ -1627,11 +1632,11 @@ class MailThread(models.AbstractModel):
         done_partners = [follower for follower in followers if follower.email_normalized in normalized_emails]
         remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
 
-        user_partners = self._mail_search_on_user(remaining)
+        user_partners = self._mail_search_on_user(remaining, extra_domain=extra_domain)
         done_partners += [user_partner for user_partner in user_partners]
         remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
 
-        partners = self._mail_search_on_partner(remaining)
+        partners = self._mail_search_on_partner(remaining, extra_domain=extra_domain)
         done_partners += [partner for partner in partners]
         remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
 
@@ -1994,8 +1999,8 @@ class MailThread(models.AbstractModel):
         MailThread = self.env['mail.thread']
         values = {
             'parent_id': parent_id,
-            'model': self._name if self else False,
-            'res_id': self.id if self else False,
+            'model': self._name if self else model,
+            'res_id': self.id if self else res_id,
             'message_type': 'user_notification',
             'subject': subject,
             'body': body,
@@ -2227,6 +2232,8 @@ class MailThread(models.AbstractModel):
             base_template = False
 
         mail_subject = message.subject or (message.record_name and 'Re: %s' % message.record_name) # in cache, no queries
+        # Replace new lines by spaces to conform to email headers requirements
+        mail_subject = ' '.join((mail_subject or '').splitlines())
         # prepare notification mail values
         base_mail_values = {
             'mail_message_id': message.id,
@@ -2604,7 +2611,8 @@ class MailThread(models.AbstractModel):
         for group_name, group_func, group_data in groups:
             group_data.setdefault('notification_group_name', group_name)
             group_data.setdefault('notification_is_customer', False)
-            group_data.setdefault('has_button_access', True)
+            is_thread_notification = self._notify_get_recipients_thread_info(msg_vals=msg_vals)['is_thread_notification']
+            group_data.setdefault('has_button_access', is_thread_notification)
             group_button_access = group_data.setdefault('button_access', {})
             group_button_access.setdefault('url', access_link)
             group_button_access.setdefault('title', view_title)
@@ -2624,6 +2632,15 @@ class MailThread(models.AbstractModel):
                 result.append(group_data)
 
         return result
+
+    def _notify_get_recipients_thread_info(self, msg_vals=None):
+        """ Tool method to compute thread info used in ``_notify_classify_recipients``
+        and its sub-methods. """
+        res_model = msg_vals['model'] if msg_vals and 'model' in msg_vals else self._name
+        res_id = msg_vals['res_id'] if msg_vals and 'res_id' in msg_vals else self.ids[0] if self.ids else False
+        return {
+            'is_thread_notification': res_model and (res_model != 'mail.thread') and res_id
+        }
 
     @api.model
     def _notify_get_reply_to_on_records(self, default=None, records=None, company=None, doc_names=None):

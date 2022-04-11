@@ -406,15 +406,27 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.pos_config.current_session_id.action_pos_session_closing_control()
 
     def test_order_to_picking02(self):
-        """ This test is similar to test_order_to_picking except that this time, the product is tracked and its
-         location is a sublocation of the main warehouse
+        """ This test is similar to test_order_to_picking except that this time, there are three products:
+            - One tracked by lot, with preexisting lot
+            - One tracked by lot, without preexisting lot
+            - One untracked
+            - All are in a sublocation of the main warehouse
         """
-        product = self.env['product.product'].create({
-            'name': 'SuperProduct',
+        tracked_product_w_lot, tracked_product_wo_lot, untracked_product = self.env['product.product'].create([{
+            'name': 'SuperProduct Tracked',
             'type': 'product',
             'tracking': 'lot',
             'available_in_pos': True,
-        })
+        }, {
+            'name': 'SuperProduct Tracked No Lot',
+            'type': 'product',
+            'tracking': 'lot',
+            'available_in_pos': True,
+        }, {
+            'name': 'SuperProduct Untracked',
+            'type': 'product',
+            'available_in_pos': True,
+        }])
         wh_location = self.company_data['default_warehouse'].lot_stock_id
         shelf1_location = self.env['stock.location'].create({
             'name': 'shelf1',
@@ -423,16 +435,18 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         })
         lot = self.env['stock.production.lot'].create({
             'name': 'SuperLot',
-            'product_id': product.id,
+            'product_id': tracked_product_w_lot.id,
             'company_id': self.env.company.id,
         })
         qty = 2
-        self.env['stock.quant']._update_available_quantity(product, shelf1_location, qty, lot_id=lot)
+        self.env['stock.quant']._update_available_quantity(tracked_product_w_lot, shelf1_location, qty, lot_id=lot)
+        self.env['stock.quant']._update_available_quantity(tracked_product_wo_lot, shelf1_location, qty)
+        self.env['stock.quant']._update_available_quantity(untracked_product, shelf1_location, qty)
 
         self.pos_config.open_session_cb()
         self.pos_config.current_session_id.update_stock_at_closing = False
 
-        untax, atax = self.compute_tax(product, 1.15, 1)
+        untax, atax = self.compute_tax(tracked_product_w_lot, 1.15, 1)
 
         for i in range(qty):
             pos_order = self.PosOrder.create({
@@ -442,17 +456,36 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'partner_id': self.partner1.id,
                 'lines': [(0, 0, {
                     'name': "OL/0001",
-                    'product_id': product.id,
+                    'product_id': tracked_product_w_lot.id,
                     'price_unit': untax + atax,
                     'discount': 0.0,
                     'qty': 1.0,
-                    'tax_ids': [(6, 0, product.taxes_id.ids)],
+                    'tax_ids': [(6, 0, tracked_product_w_lot.taxes_id.ids)],
                     'price_subtotal': untax,
                     'price_subtotal_incl': untax + atax,
                     'pack_lot_ids': [[0, 0, {'lot_name': lot.name}]],
+                }), (0, 0, {
+                    'name': "OL/0002",
+                    'product_id': untracked_product.id,
+                    'price_unit': untax + atax,
+                    'discount': 0.0,
+                    'qty': 1.0,
+                    'tax_ids': [(6, 0, untracked_product.taxes_id.ids)],
+                    'price_subtotal': untax,
+                    'price_subtotal_incl': untax + atax,
+                }), (0, 0, {
+                    'name': "OL/0003",
+                    'product_id': tracked_product_wo_lot.id,
+                    'price_unit': untax + atax,
+                    'discount': 0.0,
+                    'qty': 1.0,
+                    'tax_ids': [(6, 0, tracked_product_wo_lot.taxes_id.ids)],
+                    'price_subtotal': untax,
+                    'price_subtotal_incl': untax + atax,
+                    'pack_lot_ids': [[0, 0, {'lot_name': 'New SuperLot'}]],
                 })],
-                'amount_tax': atax,
-                'amount_total': untax + atax,
+                'amount_tax': 3 * atax,
+                'amount_total': 3 * (untax + atax),
                 'amount_paid': 0,
                 'amount_return': 0,
             })
@@ -462,14 +495,21 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 "active_id": pos_order.id,
             }
             pos_make_payment = self.PosMakePayment.with_context(context_make_payment).create({
-                'amount': untax + atax,
+                'amount': 3 * (untax + atax),
             })
             context_payment = {'active_id': pos_order.id}
             pos_make_payment.with_context(context_payment).check()
 
             self.assertEqual(pos_order.state, 'paid')
-            self.assertEqual(pos_order.picking_ids[0].move_line_ids.lot_id, lot)
-            self.assertEqual(pos_order.picking_ids[0].move_line_ids.location_id, shelf1_location)
+            tracked_line_w_lot = pos_order.picking_ids.move_line_ids.filtered(lambda ml: ml.product_id.id == tracked_product_w_lot.id)
+            tracked_line_wo_lot = pos_order.picking_ids.move_line_ids.filtered(lambda ml: ml.product_id.id == tracked_product_wo_lot.id)
+            untracked_line = pos_order.picking_ids.move_line_ids - (tracked_line_w_lot | tracked_line_wo_lot)
+            self.assertEqual(tracked_line_w_lot.lot_id, lot)
+            self.assertTrue(tracked_line_wo_lot.lot_id)
+            self.assertFalse(untracked_line.lot_id)
+            self.assertEqual(tracked_line_w_lot.location_id, shelf1_location)
+            self.assertEqual(tracked_line_wo_lot.location_id, pos_order.config_id.picking_type_id.default_location_src_id)
+            self.assertEqual(untracked_line.location_id, shelf1_location)
 
         self.pos_config.current_session_id.action_pos_session_closing_control()
 

@@ -30,7 +30,8 @@ class SaleOrder(models.Model):
     def recompute_coupon_lines(self):
         for order in self:
             order._remove_invalid_reward_lines()
-            order._create_new_no_code_promo_reward_lines()
+            if order.state != 'cancel':
+                order._create_new_no_code_promo_reward_lines()
             order._update_existing_reward_lines()
 
     @api.returns('self', lambda value: value.id)
@@ -48,8 +49,8 @@ class SaleOrder(models.Model):
         self._send_reward_coupon_mail()
         return super(SaleOrder, self).action_confirm()
 
-    def action_cancel(self):
-        res = super(SaleOrder, self).action_cancel()
+    def _action_cancel(self):
+        res = super()._action_cancel()
         self.generated_coupon_ids.write({'state': 'expired'})
         self.applied_coupon_ids.write({'state': 'new'})
         self.applied_coupon_ids.sales_order_id = False
@@ -95,7 +96,8 @@ class SaleOrder(models.Model):
                 order_total = sum(order_lines.mapped('price_total')) - (program.reward_product_quantity * program.reward_product_id.lst_price)
                 reward_product_qty = min(reward_product_qty, order_total // program.rule_minimum_amount)
         else:
-            reward_product_qty = min(program.reward_product_quantity, total_qty)
+            program_in_order = max_product_qty // program.rule_min_quantity
+            reward_product_qty = min(program.reward_product_quantity * program_in_order, total_qty)
 
         reward_qty = min(int(int(max_product_qty / program.rule_min_quantity) * program.reward_product_quantity), reward_product_qty)
         # Take the default taxes on the reward product, mapped with the fiscal position
@@ -154,7 +156,8 @@ class SaleOrder(models.Model):
             }]
         reward_dict = {}
         lines = self._get_paid_order_lines()
-        amount_total = sum(self._get_base_order_lines(program).mapped('price_subtotal'))
+        amount_total = sum([any(line.tax_id.mapped('price_include')) and line.price_total or line.price_subtotal
+                            for line in self._get_base_order_lines(program)])
         if program.discount_apply_on == 'cheapest_product':
             line = self._get_cheapest_line()
             if line:
@@ -273,8 +276,8 @@ class SaleOrder(models.Model):
             no_outdated_coupons=True,
         ).search([
             ('company_id', 'in', [self.company_id.id, False]),
-            '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', self.date_order),
-            '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', self.date_order),
+            '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', fields.Datetime.now()),
+            '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', fields.Datetime.now()),
         ], order="id")._filter_programs_from_common_rules(self)
         # no impact code...
         # should be programs = programs.filtered if we really want to filter...
@@ -289,8 +292,8 @@ class SaleOrder(models.Model):
             applicable_coupon=True,
         ).search([
             ('promo_code_usage', '=', 'no_code_needed'),
-            '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', self.date_order),
-            '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', self.date_order),
+            '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', fields.Datetime.now()),
+            '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', fields.Datetime.now()),
             '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
         ])._filter_programs_from_common_rules(self)
         return programs
@@ -509,6 +512,13 @@ class SaleOrderLine(models.Model):
             # If company_id is set, always filter taxes by the company
             taxes = line.tax_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id)
+
+    def _get_display_price(self, product):
+        # A product created from a promotion does not have a list_price.
+        # The price_unit of a reward order line is computed by the promotion, so it can be used directly
+        if self.is_reward_line:
+            return self.price_unit
+        return super()._get_display_price(product)
 
     # Invalidation of `coupon.program.order_count`
     # `test_program_rules_validity_dates_and_uses`,

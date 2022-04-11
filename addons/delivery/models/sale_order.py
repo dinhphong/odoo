@@ -18,7 +18,7 @@ class SaleOrder(models.Model):
     @api.depends('order_line')
     def _compute_is_service_products(self):
         for so in self:
-            so.is_all_service = all(line.product_id.type == 'service' for line in so.order_line)
+            so.is_all_service = all(line.product_id.type == 'service' for line in so.order_line.filtered(lambda x: not x.display_type))
 
     def _compute_amount_total_without_delivery(self):
         self.ensure_one()
@@ -30,11 +30,17 @@ class SaleOrder(models.Model):
         for order in self:
             order.delivery_set = any(line.is_delivery for line in order.order_line)
 
-    @api.onchange('order_line', 'partner_id')
+    @api.onchange('order_line', 'partner_id', 'partner_shipping_id')
     def onchange_order_line(self):
+        self.ensure_one()
         delivery_line = self.order_line.filtered('is_delivery')
         if delivery_line:
             self.recompute_delivery_price = True
+
+    def _get_update_prices_lines(self):
+        """ Exclude delivery lines from price list recomputation based on product instead of carrier """
+        lines = super()._get_update_prices_lines()
+        return lines.filtered(lambda line: not line.is_delivery)
 
     def _remove_delivery_line(self):
         delivery_lines = self.env['sale.order.line'].search([('order_id', 'in', self.ids), ('is_delivery', '=', True)])
@@ -117,7 +123,7 @@ class SaleOrder(models.Model):
         else:
             values['price_unit'] = price_unit
         if carrier.free_over and self.currency_id.is_zero(price_unit) :
-            values['name'] += '\n' + 'Free Shipping'
+            values['name'] += '\n' + _('Free Shipping')
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
         sol = SaleOrderLine.sudo().create(values)

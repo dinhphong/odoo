@@ -143,7 +143,7 @@ class PosOrder(models.Model):
             pos_order._create_order_picking()
 
         if pos_order.to_invoice and pos_order.state == 'paid':
-            pos_order.action_pos_order_invoice()
+            pos_order._generate_pos_order_invoice()
 
         return pos_order.id
 
@@ -201,7 +201,7 @@ class PosOrder(models.Model):
             .mapped('picking_ids.move_lines')\
             ._filter_anglo_saxon_moves(product)\
             .sorted(lambda x: x.date)
-        price_unit = product._compute_average_price(0, quantity, moves)
+        price_unit = product.with_company(self.company_id)._compute_average_price(0, quantity, moves)
         return price_unit
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
@@ -458,7 +458,7 @@ class PosOrder(models.Model):
                 maxDiff = currency.round(self.config_id.rounding_method.rounding)
 
             diff = currency.round(self.amount_total - self.amount_paid)
-            if not abs(diff) < maxDiff:
+            if not abs(diff) <= maxDiff:
                 raise UserError(_("Order %s is not fully paid.", self.name))
 
         self.write({'state': 'paid'})
@@ -468,6 +468,13 @@ class PosOrder(models.Model):
     def _prepare_invoice_vals(self):
         self.ensure_one()
         timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        note = self.note or ''
+        terms = ''
+        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
+            terms = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
+
+        narration = note + '\n' + terms if note else terms
+
         vals = {
             'payment_reference': self.name,
             'invoice_origin': self.name,
@@ -475,7 +482,7 @@ class PosOrder(models.Model):
             'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
             'ref': self.name,
             'partner_id': self.partner_id.id,
-            'narration': self.note or '',
+            'narration': narration,
             # considering partner's sale pricelist's currency
             'currency_id': self.pricelist_id.currency_id.id,
             'invoice_user_id': self.user_id.id,
@@ -487,8 +494,14 @@ class PosOrder(models.Model):
             else False
         }
         return vals
-
     def action_pos_order_invoice(self):
+        self.write({'to_invoice': True})
+        res = self._generate_pos_order_invoice()
+        if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing:
+            self._create_order_picking()
+        return res
+
+    def _generate_pos_order_invoice(self):
         moves = self.env['account.move']
 
         for order in self:
@@ -626,7 +639,6 @@ class PosOrder(models.Model):
             'datas': ticket,
             'res_model': 'pos.order',
             'res_id': self.ids[0],
-            'store_fname': filename,
             'mimetype': 'image/jpeg',
         })
         mail_values = {
@@ -645,7 +657,6 @@ class PosOrder(models.Model):
                 'name': filename,
                 'type': 'binary',
                 'datas': base64.b64encode(report[0]),
-                'store_fname': filename,
                 'res_model': 'pos.order',
                 'res_id': self.ids[0],
                 'mimetype': 'application/x-pdf'

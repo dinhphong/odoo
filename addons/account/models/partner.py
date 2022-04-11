@@ -170,8 +170,15 @@ class AccountFiscalPosition(models.Model):
         partner = PartnerObj.browse(partner_id)
         delivery = PartnerObj.browse(delivery_id)
 
-        # If partner and delivery have the same vat prefix, use invoicing
-        if not delivery or (delivery.vat and partner.vat and delivery.vat[:2] == partner.vat[:2]):
+        company = self.env.company
+        eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
+        intra_eu = vat_exclusion = False
+        if company.vat and partner.vat:
+            intra_eu = company.vat[:2] in eu_country_codes and partner.vat[:2] in eu_country_codes
+            vat_exclusion = company.vat[:2] == partner.vat[:2]
+
+        # If company and partner have the same vat prefix (and are both within the EU), use invoicing
+        if not delivery or (intra_eu and vat_exclusion):
             delivery = partner
 
         # partner manually set fiscal position always win
@@ -286,7 +293,7 @@ class ResPartner(models.Model):
               AND NOT acc.deprecated AND acc.company_id = %s
               AND move.state = 'posted'
             GROUP BY partner.id
-            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) ''' + operator + ''' %s''', (account_type, self.env.user.company_id.id, sign, operand))
+            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) ''' + operator + ''' %s''', (account_type, self.env.company.id, sign, operand))
         res = self._cr.fetchall()
         if not res:
             return [('id', '=', '0')]
@@ -423,8 +430,8 @@ class ResPartner(models.Model):
     invoice_warn_msg = fields.Text('Message for Invoice')
     # Computed fields to order the partners as suppliers/customers according to the
     # amount of their generated incoming/outgoing account moves
-    supplier_rank = fields.Integer(default=0)
-    customer_rank = fields.Integer(default=0)
+    supplier_rank = fields.Integer(default=0, copy=False)
+    customer_rank = fields.Integer(default=0, copy=False)
 
     def _get_name_search_order_by_fields(self):
         res = super()._get_name_search_order_by_fields()

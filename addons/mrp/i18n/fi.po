@@ -28,8 +28,10 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2020
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2020
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Petteri Torssonen <info@collapick.com>, 2021
+# Miika Nissi <miika.nissi@tawasta.fi>, 2021
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
+# Pekka Ikonen, 2021
 # 
 msgid ""
 msgstr ""
@@ -37,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Petteri Torssonen <info@collapick.com>, 2021\n"
+"Last-Translator: Pekka Ikonen, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,13 +73,13 @@ msgid ""
 msgstr ""
 " * Valmiina: Materiaali on saatavilla tuotannon aloittamiseksi.\n"
 "            * Odottaa: Materiaali ei ole saatavilla tuotannon aloittamiseksi.\n"
-"            Materiaali saatavuuteen vaikuttaa Osaluettelossa määritelty tuotannon valmius."
+"            Materiaalin saatavuuteen vaikuttaa Osaluettelossa määritelty tuotannon valmius."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid " <br/><br/> The components will be taken from <b>%s</b>."
-msgstr ""
+msgstr " <br/><br/> Komponentit tullaan ottamaan <b>%ssta</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -420,7 +422,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "A workcenter cannot be an alternative of itself"
-msgstr "Työpiste ei voi olla vaihtoehtoinen itselleen"
+msgstr "Työpiste ei voi olla vaihtoehtona itselleen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -547,7 +549,7 @@ msgstr "Sallittu Toiminto"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_product_ids
 msgid "Allowed Product"
-msgstr "Sallittu Tuote"
+msgstr "Sallittu tuote"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -577,8 +579,8 @@ msgid ""
 "Alternative workcenters that can be substituted to this one in order to "
 "dispatch production"
 msgstr ""
-"Vaihtoehtoiset työpisteet, jotka voidaan vaihtaa tämän tilalle tuotantoon  "
-"lähettämiseksi"
+"Vaihtoehtoiset työpisteet, joilla voidaan korvata tämä työpiste tuotannon "
+"aikana"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -596,7 +598,7 @@ msgstr "Käytä"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 msgid "Apply on Variants"
-msgstr "Sovella Variaatioissa"
+msgstr "Käytä varianteilla"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -614,7 +616,7 @@ msgstr "Arkistoitu"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Manufacturing Order."
-msgstr ""
+msgstr "Valmistustilauksen luonnissa."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1060,12 +1062,12 @@ msgstr "Komponentti"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
 msgid "Component Availability"
-msgstr "Komponentti Saatavuus"
+msgstr "Komponentin saatavuus"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Component Available"
-msgstr "Komponentti Saatavilla"
+msgstr "Komponentti saatavilla"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
@@ -1120,7 +1122,7 @@ msgstr "Vahvista"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__confirm_cancel
 msgid "Confirm Cancel"
-msgstr "Vahvista Peruutus"
+msgstr "Vahvista peruutus"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__confirmed
@@ -1576,12 +1578,12 @@ msgstr "Keston Laskenta"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_percent
 msgid "Duration Deviation (%)"
-msgstr "Keston Poikkeavuus (%)"
+msgstr "Keston poikkeavuus (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_unit
 msgid "Duration Per Unit"
-msgstr "Kesto Per Yksikkö"
+msgstr "Kesto yksikköä kohden"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -1640,7 +1642,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Exp %s"
-msgstr ""
+msgstr "Odotettu %s"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__components_availability_state__expected
@@ -1701,7 +1703,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__finished_move_line_ids
 msgid "Finished Product"
-msgstr "Valmis Tuote"
+msgstr "Valmis tuote"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_finished_product
@@ -1731,7 +1733,7 @@ msgstr "Joustava"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__consumption
 msgid "Flexible Consumption"
-msgstr "Joustava Kulutus"
+msgstr "Joustava kulutus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_follower_ids
@@ -2025,7 +2027,7 @@ msgstr "Vaikutetut siirrot"
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "Import Template for Bills of Materials"
-msgstr ""
+msgstr "Osaluetteloiden Excel-pohja"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -2475,7 +2477,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Manufactured in the last 365 days"
-msgstr "Valmistettu viimeisen 365 päivän aikana"
+msgstr "Valmistettu viimeisten 365 päivän aikana"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -2712,7 +2714,7 @@ msgstr "Ei dataa saatavilla."
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workcenter_load_report_graph
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_report
 msgid "No data yet!"
-msgstr ""
+msgstr "Ei vielä tietoja!"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
@@ -2767,6 +2769,15 @@ msgstr "Ei saatavilla"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_scrap__workorder_id
 msgid "Not to restrict or prefer quants, but informative."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:0
+#, python-format
+msgid ""
+"Note that archived work center(s): '%s' is/are still linked to active Bill "
+"of Materials, which means that operations can still be planned on it/them. "
+"To prevent this, deletion of the work center is recommended instead."
 msgstr ""
 
 #. module: mrp
@@ -3753,7 +3764,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
 msgid "Set duration manually"
-msgstr ""
+msgstr "Aseta kesto manuaalisesti"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -4010,7 +4021,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
 msgid "Subcontracting"
-msgstr ""
+msgstr "Alihankinta"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk
@@ -4331,7 +4342,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__to_backorder
 msgid "To Backorder"
-msgstr ""
+msgstr "Jälkitoimitettavat"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__to_close
@@ -4382,7 +4393,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Total Duration"
-msgstr ""
+msgstr "Kokonaiskesto"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_late_count
@@ -4417,7 +4428,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Total duration"
-msgstr ""
+msgstr "Kokonaiskesto"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5201,7 +5212,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "bills of materials"
-msgstr ""
+msgstr "osaluettelot"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo

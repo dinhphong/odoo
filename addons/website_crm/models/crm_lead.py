@@ -20,7 +20,7 @@ class Lead(models.Model):
                         JOIN crm_lead_website_visitor_rel lv ON l.id = lv.crm_lead_id
                         JOIN website_visitor v ON v.id = lv.website_visitor_id
                         JOIN website_track p ON p.visitor_id = v.id
-                        WHERE l.id in %s
+                        WHERE l.id in %s AND v.active = TRUE
                         GROUP BY l.id"""
             self.env.cr.execute(sql, (tuple(self.ids),))
             page_data = self.env.cr.dictfetchall()
@@ -33,7 +33,7 @@ class Lead(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("website.website_visitor_page_action")
         action['domain'] = [('visitor_id', 'in', visitors.ids)]
         # avoid grouping if only few records
-        if len(visitors.website_track_ids.ids) > 15 and len(visitors.page_ids.ids) > 1:
+        if len(visitors.website_track_ids) > 15 and len(visitors.website_track_ids.page_id) > 1:
             action['context'] = {'search_default_group_by_page': '1'}
         return action
 

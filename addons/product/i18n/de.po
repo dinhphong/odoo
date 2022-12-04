@@ -19,12 +19,12 @@
 # Leon Grill <leg@odoo.com>, 2020
 # Felix Hoßfeld <felix.hossfeld@thoughtgang.de>, 2020
 # Felix Schubert <felix.schubert@go-erp.com>, 2020
-# Martin Trigaux, 2020
 # Andreas Jonderko <a.jonderko@gastronovi.com>, 2021
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
 # Chris Egal <sodaswed@web.de>, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -793,7 +793,7 @@ msgstr "Gewichtseinheit definieren"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
 msgid "Delivery Lead Time"
-msgstr "Tage bis Auslieferung"
+msgstr "Tage bis Lieferung"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__description
@@ -2421,6 +2421,12 @@ msgstr ""
 "Die Produktvorlage wird archiviert, daher ist keine Kombination möglich."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -3030,6 +3036,16 @@ msgstr ""
 "SIe können das Attribut %s nicht vom Produkt %s zum Produkt %s verschieben."
 
 #. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
+msgstr ""
+"Sie können eine Preislistenregel nicht deaktivieren, bitte löschen Sie sie "
+"oder archivieren Sie stattdessen ihre Preisliste."
+
+#. module: product
 #: code:addons/product/models/product_attribute.py:0
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
@@ -3100,7 +3116,7 @@ msgstr "z. B. USD Wiederverkäufer"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "per"
-msgstr ""
+msgstr "pro"
 
 #. module: product
 #: code:addons/product/models/product.py:0

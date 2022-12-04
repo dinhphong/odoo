@@ -18,8 +18,8 @@
 # BigBlu <paolo.moroni@air-srl.com>, 2021
 # Alessandro Fiorino <alessandro.fiorino@digitaldomus.it>, 2021
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -27,13 +27,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -375,8 +375,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-caret-right\" role=\"img\" aria-label=\"Unfold\" "
 "title=\"Unfold\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-caret-right\" role=\"img\" aria-label=\"Unfold\" "
-"title=\"Deminimizza\"/>"
+"<i class=\"fa fa-fw fa-caret-right\" role=\"img\" aria-label=\"Espandi\" "
+"title=\"Espandi\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -563,7 +563,7 @@ msgstr "<strong>Collo</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Product Barcode</strong>"
-msgstr "<strong>Barcode prodotto</strong>"
+msgstr "<strong>Codice a barre prodotto</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
@@ -1017,22 +1017,22 @@ msgstr "Ordini residui"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Barcode"
-msgstr "Barcode"
+msgstr "Codice a barre"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
-msgstr "Nomenclature barcode"
+msgstr "Nomenclature codici a barre"
 
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
 msgid "Barcode Rule"
-msgstr "Regola barcode"
+msgstr "Regola codice a barre"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_barcode
 msgid "Barcode Scanner"
-msgstr "Lettore barcode"
+msgstr "Lettore codici a barre"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
@@ -1041,19 +1041,19 @@ msgid ""
 "            Manual inventory adjustments can also be performed and pre-filled with\n"
 "            suggested counted quantity."
 msgstr ""
-"Il lettore di barcode può essere attivato dalle impostazioni di magazzino.\n"
+"Il lettore di codici a barre può essere attivato dalle impostazioni di magazzino.\n"
 "            Le rettifiche di inventario manuali possono anche essere effettuate e precompilate\n"
 "            con le quantità conteggiate proposte."
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_label_transfer_template_pdf
 msgid "Barcodes (PDF)"
-msgstr "Barcode (PDF)"
+msgstr "Codici a barre (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_label_transfer_template_zpl
 msgid "Barcodes (ZPL)"
-msgstr "Barcode (ZPL)"
+msgstr "Codici a barre (ZPL)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
@@ -2461,7 +2461,7 @@ msgstr "Minimizza"
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_follower_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_follower_ids
 msgid "Followers"
-msgstr "Chi sta seguendo"
+msgstr "Seguito da"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__message_channel_ids
@@ -2469,7 +2469,7 @@ msgstr "Chi sta seguendo"
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_channel_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Chi sta seguendo (canali)"
+msgstr "Seguito da (canali)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__message_partner_ids
@@ -2477,7 +2477,7 @@ msgstr "Chi sta seguendo (canali)"
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_partner_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Chi sta seguendo (partner)"
+msgstr "Seguito da (partner)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__activity_type_icon
@@ -3616,7 +3616,7 @@ msgstr "Ubicazione"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_location_barcode
 msgid "Location Barcode"
-msgstr "Posizione Barcode"
+msgstr "Codice a barre ubicazione"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__name
@@ -3759,7 +3759,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Lots/Serial Numbers"
-msgstr "Lotti/Numeri di serie"
+msgstr "Numeri di lotto/serie"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
@@ -4537,17 +4537,17 @@ msgstr "Collo"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
 msgid "Package Barcode (PDF)"
-msgstr "Barcode del pacchetto (PDF)"
+msgstr "Codice a barre del collo (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_package_template
 msgid "Package Barcode (ZPL)"
-msgstr "Barcode del pacchetto (ZPL)"
+msgstr "Codice a barre del collo (ZPL)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode
 msgid "Package Barcode with Content"
-msgstr "Barcode della confezione con contenuto"
+msgstr "Codice a barre del collo con contenuto"
 
 #. module: stock
 #: code:addons/stock/models/stock_package_level.py:0
@@ -4817,7 +4817,7 @@ msgstr "Data di elaborazione per essere puntuali"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process operations faster with barcodes"
-msgstr "Elabora più velocemente le operazioni con i barcode"
+msgstr "Elabora più velocemente le operazioni con i codici a barre"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4900,7 +4900,7 @@ msgstr "Disponibilità prodotto"
 #: model:ir.actions.report,name:stock.label_barcode_product_product
 #: model:ir.actions.report,name:stock.label_barcode_product_template
 msgid "Product Barcode (ZPL)"
-msgstr "Barcode prodotto (ZPL)"
+msgstr "Codice a barre prodotto (ZPL)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__categ_ids
@@ -6679,7 +6679,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company !"
-msgstr "Il barcode di una ubicazione deve essere univoco per azienda."
+msgstr "Il codice a barre di una ubicazione deve essere univoco per azienda."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -7084,7 +7084,8 @@ msgstr ""
 #: model:digest.tip,name:stock.digest_tip_stock_0
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
 msgid "Tip: Speed up inventory operations with barcodes"
-msgstr "Suggerimento: velocizza le operazioni di inventario con i barcode"
+msgstr ""
+"Suggerimento: velocizza le operazioni di inventario con i codici a barre"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_dest_id
@@ -7355,7 +7356,7 @@ msgstr "Connettore USPS"
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:0
 #, python-format
 msgid "Unfold"
-msgstr "Deminimizza"
+msgstr "Espandi"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot__name
@@ -7642,7 +7643,7 @@ msgstr "In attesa di trasferimenti"
 msgid "Want to speed up your inventory counts? Try our Barcode app"
 msgstr ""
 "Vuoi velocizzare i conteggi dell'inventario? Prova la nostra applicazione "
-"Barcode"
+"per il codice a barre."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -7989,6 +7990,12 @@ msgstr ""
 "movimento."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8303,15 +8310,6 @@ msgstr ""
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "È necessario fornire un numero di lotto/serie per i prodotti %s."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0

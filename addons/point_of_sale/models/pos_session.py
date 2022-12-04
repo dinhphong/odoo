@@ -93,7 +93,7 @@ class PosSession(models.Model):
         help="Auto-generated session for orphan orders, ignored in constraints",
         readonly=True,
         copy=False)
-    move_id = fields.Many2one('account.move', string='Journal Entry')
+    move_id = fields.Many2one('account.move', string='Journal Entry', index=True)
     payment_method_ids = fields.Many2many('pos.payment.method', related='config_id.payment_method_ids', string='Payment Methods')
     total_payments_amount = fields.Float(compute='_compute_total_payments_amount', string='Total Payments Amount')
     is_in_company_currency = fields.Boolean('Is Using Company Currency', compute='_compute_is_in_company_currency')
@@ -147,6 +147,7 @@ class PosSession(models.Model):
     def action_stock_picking(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('stock.action_picking_tree_ready')
+        action['display_name'] = _('Pickings')
         action['context'] = {}
         action['domain'] = [('id', 'in', self.picking_ids.ids)]
         return action
@@ -794,7 +795,7 @@ class PosSession(models.Model):
         # may arise in 'Round Globally'.
         check_refund = lambda x: x.qty * x.price_unit < 0
         is_refund = check_refund(order_line)
-        tax_data = tax_ids.compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=is_refund)
+        tax_data = tax_ids.with_context(force_sign=sign).compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=is_refund)
         taxes = tax_data['taxes']
         # For Cash based taxes, use the account from the repartition line immediately as it has been paid already
         for tax in taxes:

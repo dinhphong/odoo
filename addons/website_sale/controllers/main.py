@@ -282,6 +282,7 @@ class WebsiteSale(http.Controller):
 
         values = {
             'search': search,
+            'order': post.get('order', ''),
             'category': category,
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
@@ -575,6 +576,13 @@ class WebsiteSale(http.Controller):
         error = dict()
         error_message = []
 
+        # prevent name change if invoices exist
+        if data.get('partner_id'):
+            partner = request.env['res.partner'].browse(int(data['partner_id']))
+            if partner.exists() and partner.name and not partner.sudo().can_edit_vat() and 'name' in data and (data['name'] or False) != (partner.name or False):
+                error['name'] = 'error'
+                error_message.append(_('Changing your name is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
+
         # Required fields from form
         required_fields = [f for f in (all_form_values.get('field_required') or '').split(',') if f]
 
@@ -710,7 +718,7 @@ class WebsiteSale(http.Controller):
                 return request.redirect('/shop/checkout')
 
         # IF POSTED
-        if 'submitted' in kw:
+        if 'submitted' in kw and request.httprequest.method == "POST":
             pre_values = self.values_preprocess(order, mode, kw)
             errors, error_msg = self.checkout_form_validate(mode, kw, pre_values)
             post, errors, error_msg = self.values_postprocess(order, mode, pre_values, errors, error_msg)
@@ -720,6 +728,10 @@ class WebsiteSale(http.Controller):
                 values = kw
             else:
                 partner_id = self._checkout_form_save(mode, post, kw)
+                # We need to validate _checkout_form_save return, because when partner_id not in shippings
+                # it returns Forbidden() instead the partner_id
+                if isinstance(partner_id, Forbidden):
+                    return partner_id
                 if mode[1] == 'billing':
                     order.partner_id = partner_id
                     order.with_context(not_self_saleperson=True).onchange_partner_id()
@@ -875,6 +887,12 @@ class WebsiteSale(http.Controller):
             return_url= '/shop/payment/validate',
             bootstrap_formatting= True
         )
+        if order.partner_id.company_id and order.partner_id.company_id.id != order.company_id.id:
+            values['errors'].append(
+                (_('Sorry, we are unable to find a Payment Method'),
+                 _('No payment method is available for your current order. '
+                   'Please contact us for more information.')))
+            return values
 
         domain = expression.AND([
             ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', order.company_id.id)],
@@ -1266,7 +1284,7 @@ class WebsiteSale(http.Controller):
                 ['product_id', 'visit_datetime:max'], ['product_id'], limit=max_number_of_product_for_carousel, orderby='visit_datetime DESC')
             products_ids = [product['product_id'][0] for product in products]
             if products_ids:
-                viewed_products = request.env['product.product'].with_context(display_default_code=False).browse(products_ids)
+                viewed_products = request.env['product.product'].with_context(display_default_code=False).search([('id', 'in', products_ids)])
 
                 FieldMonetary = request.env['ir.qweb.field.monetary']
                 monetary_options = {

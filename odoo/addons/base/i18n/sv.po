@@ -17,13 +17,14 @@
 # Robert Frykelius <robert.frykelius@linserv.se>, 2021
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2021
 # 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2021
-# Kim Asplund <kim.asplund@gmail.com>, 2021
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Victor Ekström, 2021
-# Robin Calvin, 2022
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Emanuel Bergsten, 2022
+# emavertel, 2022
 # Simon S, 2022
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
+# Kim Asplund <kim.asplund@gmail.com>, 2022
+# Robin Calvin, 2022
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Simon S, 2022\n"
+"Last-Translator: Robin Calvin, 2022\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5146,6 +5147,14 @@ msgid ""
 "* Equipments related to workcenters\n"
 "* MTBF, MTTR, ...\n"
 msgstr ""
+"\n"
+"Underhåll i MRP\n"
+"===================\n"
+"* Förebyggande kontra korrigerande underhåll\n"
+"* Definiera olika steg för dina underhållsförfrågningar\n"
+"* Planera underhållsförfrågningar (även återkommande förebyggande)\n"
+"* Utrustning relaterad till produktionsgrupper\n"
+"* MTBF, MTTR, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_twitter_wall
@@ -5589,6 +5598,13 @@ msgid ""
 "associated to every resource. It also manages the leaves of every resource.\n"
 "    "
 msgstr ""
+"\n"
+"Modul för resurshantering.\n"
+"=================================\n"
+"\n"
+"En resurs representerar något som kan schemaläggas (en utveckling på en uppgift eller en\n"
+"produktionsgrupp för tillverkningsorder). Den här modulen hanterar en resurskalender\n"
+"kopplat till varje resurs. Den hanterar också bladen på varje resurs."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail
@@ -10687,7 +10703,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mail_channel
 msgid "Allow visitors to join public mail channels"
-msgstr ""
+msgstr "Tillåt besökare att ansluta sig till offentliga e-postkanaler"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_odoo_referral
@@ -15066,6 +15082,10 @@ msgid ""
 "* Traceability report\n"
 "* Cost Structure report (mrp_account)"
 msgstr ""
+"Företragspåbyggnad för MRP\n"
+"* Arbetsorderplanering. Kontrollera planering efter Gantt-vyer grupperade efter produktionsorder/produktionsgrupp\n"
+"* Spårbarhetsrapport\n"
+"* Kostnadsstrukturrapport (mrp_account)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_contacts_enterprise
@@ -16355,7 +16375,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 #: model_terms:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Generate Missing Terms"
-msgstr ""
+msgstr "Generera Saknad Terminologi"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
@@ -16749,7 +16769,7 @@ msgstr ""
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Happy to be Sponsor"
-msgstr ""
+msgstr "Glad att vara Sponsor"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
@@ -16837,7 +16857,7 @@ msgstr "Support för rabattkupong"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_stock
 msgid "Helpdesk Stock"
-msgstr ""
+msgstr "Kundtjänst Lager"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_timesheet
@@ -19101,7 +19121,7 @@ msgstr "Ladda en översättning"
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
 msgid "Load demo data"
-msgstr ""
+msgstr "Ladda demodata"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__code
@@ -27620,9 +27640,8 @@ msgid ""
 "This module ensure that data (such as analytic accounts) defined on the sale"
 " order via timesheet app are correctly set also on subscriptions"
 msgstr ""
-"Den här modulen säkerställer att data (t.ex. analytiska konton) som "
-"definierats i ordern via tidrapporten är korrekt inställda även i "
-"prenumerationer"
+"Den här modulen säkerställer att data (t.ex. objektkonton) som definierats i"
+" ordern via tidrapporten är korrekt inställda även i prenumerationer"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_taxcloud

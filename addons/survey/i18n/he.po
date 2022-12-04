@@ -8,7 +8,7 @@
 # Ofir Blum <ofir.blum@gmail.com>, 2020
 # Martin Trigaux, 2020
 # שהאב חוסיין <shhab89@gmail.com>, 2020
-# hed shefetr <hed@laylinetech.com>, 2020
+# hed shefer <hed@laylinetech.com>, 2020
 # ExcaliberX <excaliberx@gmail.com>, 2020
 # Yihya Hugirat <hugirat@gmail.com>, 2020
 # דודי מלכה <Dudimalka6@gmail.com>, 2020
@@ -16,6 +16,9 @@
 # Lilach Gilliam <lilach@apprcase.com>, 2021
 # david danilov, 2021
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
+# Netta Waizer, 2022
+# Roy Sayag, 2022
+# NoaFarkash, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:34+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2021\n"
+"Last-Translator: NoaFarkash, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1103,7 +1106,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Certification Template"
-msgstr ""
+msgstr "תבנית הסמכה"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_give_badge_check
@@ -1113,7 +1116,7 @@ msgstr "תג תעודה חייב להיות מוגדר אם \"תן תג\" מוג
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_report_layout
 msgid "Certification template"
-msgstr ""
+msgstr "תבנית הסמכה"
 
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_certification
@@ -1141,7 +1144,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Certified"
-msgstr ""
+msgstr "הוסמך"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_1
@@ -1151,7 +1154,7 @@ msgstr "מדבקות לרגלי כסא"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
 msgid "Chart"
-msgstr ""
+msgstr "טבלה"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__is_attempts_limited
@@ -1204,7 +1207,7 @@ msgstr "סגור"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Close Live Session"
-msgstr ""
+msgstr "סגור הדמיה חיה"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__state__closed
@@ -1389,7 +1392,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Create Live Session"
-msgstr ""
+msgstr "צור הדמייה חיה"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__create_uid
@@ -1655,7 +1658,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__description_done
 msgid "End Message"
-msgstr ""
+msgstr "הודעת סיום"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__constr_error_msg
@@ -2209,7 +2212,7 @@ msgstr "עוקב"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification
 msgid "Is a Certification"
-msgstr ""
+msgstr "האם הוסמך"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__is_correct
@@ -2785,7 +2788,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Open Session Manager"
-msgstr ""
+msgstr "פתח מנהל הדמיה"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -3062,7 +3065,7 @@ msgstr "נמענים"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_count
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Registered"
-msgstr ""
+msgstr "נרשמו"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_text
@@ -3297,7 +3300,7 @@ msgstr "×§×× ××¤×¢××"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_link
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Session Link"
-msgstr ""
+msgstr "קישור לסקר"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_state
@@ -3465,7 +3468,7 @@ msgstr "הצלחה"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__scoring_success_min
 msgid "Success %"
-msgstr ""
+msgstr "% הצלחה"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__success_ratio
@@ -3560,7 +3563,7 @@ msgstr "×××××ª ××× ××¡×§×¨"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__survey_time_limit_reached
 msgid "Survey Time Limit Reached"
-msgstr ""
+msgstr "מגבלת זמן סקר הסתיימה"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__title
@@ -3570,7 +3573,7 @@ msgstr "שם הסקר"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_start_url
 msgid "Survey URL"
-msgstr ""
+msgstr "לינק לסקר"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input
@@ -3798,7 +3801,7 @@ msgstr "לא היה ניתן לגשת לדף שחיפשת."
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_scoring_success_min_check
 msgid "The percentage of success has to be defined between 0 and 100."
-msgstr ""
+msgstr "אחוזי ההצלחה צריכים להיות בין 0 ל100"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_time_limited
@@ -4239,7 +4242,7 @@ msgstr "וייטנאם"
 msgid ""
 "We have registered your answer! Please wait for the host to go to the next "
 "question."
-msgstr ""
+msgstr "רשמנו את התשובה שלך! המתן למארח בשביל להמשיך לשאלה הבאה"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids

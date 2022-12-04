@@ -931,6 +931,23 @@ class TestFields(TransactionCaseWithUserDemo):
         })
         check(1.0)
 
+    def test_20_monetary_related(self):
+        """ test value rounding with related currency """
+        currency = self.env.ref('base.USD')
+        monetary_base = self.env['test_new_api.monetary_base'].create({
+            'base_currency_id': currency.id
+        })
+        monetary_related = self.env['test_new_api.monetary_related'].create({
+            'monetary_id': monetary_base.id,
+            'total': 1/3,
+        })
+        self.env.cr.execute(
+            "SELECT total FROM test_new_api_monetary_related WHERE id=%s",
+            monetary_related.ids,
+        )
+        [total] = self.env.cr.fetchone()
+        self.assertEqual(total, .33)
+
     def test_20_like(self):
         """ test filtered_domain() on char fields. """
         record = self.env['test_new_api.multi.tag'].create({'name': 'Foo'})
@@ -2110,6 +2127,34 @@ class TestFields(TransactionCaseWithUserDemo):
         line.move_id = move2
         moves = self.env['test_new_api.move'].search([('line_ids', 'in', line.id)])
         self.assertEqual(moves, move2)
+
+    def test_73_relational_inverse(self):
+        """ Check the consistency of relational fields with inverse(s). """
+        discussion1, discussion2 = self.env['test_new_api.discussion'].create([
+            {'name': "discussion1"}, {'name': "discussion2"},
+        ])
+        category1, category2 = self.env['test_new_api.category'].create([
+            {'name': "category1"}, {'name': "category2"},
+        ])
+
+        # assumption: category12 and category21 are in different order, but are
+        # in the same order when put in a set()
+        category12 = category1 + category2
+        category21 = category2 + category1
+        self.assertNotEqual(category12.ids, category21.ids)
+        self.assertEqual(list(set(category12.ids)), list(set(category21.ids)))
+
+        # make sure discussion1.categories is in cache; the write() below should
+        # update the cache of discussion1.categories by appending category12.ids
+        discussion1.categories
+        category12.write({'discussions': [(4, discussion1.id)]})
+        self.assertEqual(discussion1.categories.ids, category12.ids)
+
+        # make sure discussion2.categories is in cache; the write() below should
+        # update the cache of discussion2.categories by appending category21.ids
+        discussion2.categories
+        category21.write({'discussions': [(4, discussion2.id)]})
+        self.assertEqual(discussion2.categories.ids, category21.ids)
 
     def test_80_copy(self):
         Translations = self.env['ir.translation']

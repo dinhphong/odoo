@@ -8,8 +8,13 @@ from odoo.exceptions import AccessError
 class User(models.Model):
     _inherit = ['res.users']
 
+    def _employee_ids_domain(self):
+        # employee_ids is considered a safe field and as such will be fetched as sudo.
+        # So try to enforce the security rules on the field to make sure we do not load employees outside of active companies
+        return [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
+
     # note: a user can only be linked to one employee per company (see sql constraint in ´hr.employee´)
-    employee_ids = fields.One2many('hr.employee', 'user_id', string='Related employee')
+    employee_ids = fields.One2many('hr.employee', 'user_id', string='Related employee', domain=_employee_ids_domain)
     employee_id = fields.Many2one('hr.employee', string="Company employee",
         compute='_compute_company_employee', search='_search_company_employee', store=False)
 
@@ -160,6 +165,11 @@ class User(models.Model):
                 result['toolbar']['action'] = [act for act in result['toolbar']['action'] if act['id'] != change_password_action.id]
         return result
 
+    def _get_employee_fields_to_sync(self):
+        """Get values to sync to the related employee when the User is changed.
+        """
+        return ['name', 'email', 'image_1920', 'tz']
+
     def write(self, vals):
         """
         Synchronize user and its related employee
@@ -179,8 +189,9 @@ class User(models.Model):
         result = super(User, self).write(vals)
 
         employee_values = {}
-        for fname in [f for f in ['name', 'email', 'image_1920', 'tz'] if f in vals]:
+        for fname in [f for f in self._get_employee_fields_to_sync() if f in vals]:
             employee_values[fname] = vals[fname]
+
         if employee_values:
             if 'email' in employee_values:
                 employee_values['work_email'] = employee_values.pop('email')

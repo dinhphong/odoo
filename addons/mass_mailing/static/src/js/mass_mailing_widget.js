@@ -347,7 +347,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         var $snippets_menu = $snippetsSideBar.find("#snippets_menu");
 
         for (const button of $snippets_menu.get(0).children) {
-            if (button.textContent === 'Select a template') {
+            if (!button.hasAttribute('tabindex') && !button.hasAttribute('accesskey')) {
                 button.style.display = 'none';
             }
         }
@@ -465,6 +465,12 @@ var MassMailingFieldHtml = FieldHtml.extend({
             $dropdown.find('.dropdown-menu').removeClass('show');
             $dropdown.find('.dropdown-item.selected').removeClass('selected');
             $dropdown.find('.dropdown-item:eq(' + themesParams.indexOf(selectedTheme) + ')').addClass('selected');
+        });
+
+        // Prevent expansion of drop-down while clicking on empty area during theme selection
+        $dropdown.on("click", ".dropdown-menu", function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
         });
 
         /**

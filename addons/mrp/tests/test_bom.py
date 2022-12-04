@@ -292,7 +292,7 @@ class TestBoM(TestMrpCommon):
         # ending the recurse call to not call the compute method and just left the Falsy value `0.0`
         # for the components available qty.
         kit_product_qty, _, _ = (self.product_7_3 + self.product_2 + self.product_3).mapped("qty_available")
-        self.assertEqual(kit_product_qty, 2)
+        self.assertEqual(kit_product_qty, 8)
 
     def test_14_bom_kit_qty_multi_uom(self):
         uom_dozens = self.env.ref('uom.product_uom_dozen')
@@ -359,6 +359,37 @@ class TestBoM(TestMrpCommon):
         self.product_2.invalidate_cache(fnames=['qty_available'], ids=self.product_2.ids)
         kit_product_qty, _ = (self.product_2 + self.product_3).mapped("qty_available")  # With product_3 in the prefetch
         self.assertEqual(float_repr(float_round(kit_product_qty, precision_digits=precision.digits), precision_digits=precision.digits), '-384.00000')
+
+    def test_13_bom_kit_qty_multi_uom(self):
+        uom_dozens = self.env.ref('uom.product_uom_dozen')
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        product_unit = self.env['product.product'].create({
+            'name': 'Test units',
+            'type': 'product',
+            'uom_id': uom_unit.id,
+        })
+        product_dozens = self.env['product.product'].create({
+            'name': 'Test dozens',
+            'type': 'product',
+            'uom_id': uom_dozens.id,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_unit.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {
+                    'product_id': product_dozens.id,
+                    'product_qty': 1,
+                    'product_uom_id': uom_unit.id,
+                })
+            ]
+        })
+        location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(product_dozens, location, 1.0)
+        self.assertEqual(product_unit.qty_available, 12.0)
 
     def test_20_bom_report(self):
         """ Simulate a crumble receipt with mrp and open the bom structure
@@ -866,7 +897,7 @@ class TestBoM(TestMrpCommon):
 
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_finished.id, searchQty=80)
 
-        self.assertAlmostEqual(report_values['lines']['total'], 0.58)
+        self.assertAlmostEqual(report_values['lines']['total'], 2.92)
 
     def test_validate_no_bom_line_with_same_product(self):
         """

@@ -10,7 +10,7 @@
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,13 +18,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__allocation_type
@@ -37,7 +37,7 @@ msgstr ""
 "\tSin límite: sin asignación predeterminada, los usuarios pueden solicitar "
 "ausencias libremente; \tPermitir solicitudes de los empleados: asignado por "
 "RRHH, los usuarios pueden solicitar ausencias y asignaciones; \tEstablecido "
-"por encargado de tiempo libre: asignado por RRHH y no puede ser pasado por "
+"por encargado de ausencias: asignado por RRHH y no puede ser pasado por "
 "alto; los usuarios pueden solicitar ausencias;"
 
 #. module: hr_holidays
@@ -782,8 +782,8 @@ msgid ""
 "Adding validity to types of time off so that it cannot be selected outside "
 "this time period"
 msgstr ""
-"Agregar validez a los tipos de tiempo libre para que no se pueda seleccionar"
-" fuera de este período de tiempo"
+"Agregar validez a los tipos de ausencias para que no se pueda seleccionar "
+"fuera de este período de tiempo"
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_manager
@@ -1566,7 +1566,7 @@ msgstr "Seguidores (Canales)"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_partner_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (Partners)"
+msgstr "Seguidores (Contactos)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_type_icon
@@ -1766,7 +1766,7 @@ msgid ""
 "type without removing it."
 msgstr ""
 "Si el campo activo se establece en falso, te permitirá ocultar el tipo de "
-"tiempo libre sin eliminarlo."
+"ausencia sin eliminarlo."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
@@ -2972,7 +2972,7 @@ msgstr "Resumen / informe de ausencias"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Time Off Taken:"
-msgstr "Tiempo libre tomado:"
+msgstr "Ausencias tomadas:"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_type
@@ -3006,7 +3006,7 @@ msgstr "Ausencias por aprobar"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Time Off."
-msgstr "Tiempo libre."
+msgstr "Ausencias."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leaves_taken
@@ -3021,7 +3021,7 @@ msgstr "Análisis de ausencias"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid "Time off Taken/Total Allocated"
-msgstr "Tiempo libre tomado / total asignado"
+msgstr "Ausencias tomadas / total asignado"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3391,6 +3391,8 @@ msgstr ""
 "ausencia"
 
 #. module: hr_holidays
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""

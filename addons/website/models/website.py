@@ -13,6 +13,7 @@ from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 
 from odoo import api, fields, models, tools, http
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
@@ -238,9 +239,11 @@ class Website(models.Model):
             vals['favicon'] = tools.image_process(vals['favicon'], size=(256, 256), crop='center', output_format='ICO')
 
     def unlink(self):
-        website = self.search([('id', 'not in', self.ids)], limit=1)
-        if not website:
-            raise UserError(_('You must keep at least one website.'))
+        if not self.env.context.get(MODULE_UNINSTALL_FLAG, False):
+            website = self.search([('id', 'not in', self.ids)], limit=1)
+            if not website:
+                raise UserError(_('You must keep at least one website.'))
+
         # Do not delete invoices, delete what's strictly necessary
         attachments_to_unlink = self.env['ir.attachment'].search([
             ('website_id', 'in', self.ids),
@@ -795,7 +798,6 @@ class Website(models.Model):
         """
 
         router = http.root.get_db_router(request.db)
-        # Force enumeration to be performed as public user
         url_set = set()
 
         sitemap_endpoint_done = set()
@@ -988,7 +990,14 @@ class Website(models.Model):
             path = urls.url_quote_plus(request.httprequest.path, safe='/')
         lang_path = ('/' + lang.url_code) if lang != self.default_lang_id else ''
         canonical_query_string = '?%s' % urls.url_encode(canonical_params) if canonical_params else ''
-        return self.get_base_url() + lang_path + path + canonical_query_string
+
+        if lang_path and path == '/':
+            # We want `/fr_BE` not `/fr_BE/` for correct canonical on homepage
+            localized_path = lang_path
+        else:
+            localized_path = lang_path + path
+
+        return self.get_base_url() + localized_path + canonical_query_string
 
     def _get_canonical_url(self, canonical_params):
         """Returns the canonical URL for the current request."""

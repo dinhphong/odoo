@@ -655,11 +655,13 @@ class SavepointCase(SingleTransactionCase):
         # restore environments after the test to avoid invoking flush() with an
         # invalid environment (inexistent user id) from another test
         envs = self.env.all.envs
+        for env in list(envs):
+            self.addCleanup(env.clear)
+        # restore the set of known environments as it was at setUp
         self.addCleanup(envs.update, list(envs))
         self.addCleanup(envs.clear)
 
         self.addCleanup(self.registry.clear_caches)
-        self.addCleanup(self.env.clear)
 
         self._savepoint_id = next(savepoint_seq)
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
@@ -1095,6 +1097,8 @@ class ChromeBrowser():
     def _wait_ready(self, ready_code, timeout=60):
         self._logger.info('Evaluate ready code "%s"', ready_code)
         awaited_result = {'result': {'type': 'boolean', 'value': True}}
+        # catch errors in ready code to prevent opening error dialogs
+        ready_code = "try { %s } catch {}" % ready_code
         ready_id = self._websocket_send('Runtime.evaluate', params={'expression': ready_code})
         last_bad_res = ''
         start_time = time.time()

@@ -1398,10 +1398,14 @@ class Monetary(Field):
 
     def convert_to_column(self, value, record, values=None, validate=True):
         # retrieve currency from values or record
+        cur_field = record._fields[self.currency_field]
         if values and self.currency_field in values:
-            field = record._fields[self.currency_field]
-            currency = field.convert_to_cache(values[self.currency_field], record, validate)
-            currency = field.convert_to_record(currency, record)
+            dummy = record.new({self.currency_field: values[self.currency_field]})
+            currency = dummy[self.currency_field]
+        elif values and cur_field.related and cur_field.related[0] in values:
+            rel_fname = cur_field.related[0]
+            dummy = record.new({rel_fname: values[rel_fname]})
+            currency = dummy[self.currency_field]
         else:
             # Note: this is wrong if 'record' is several records with different
             # currencies, which is functional nonsense and should not happen
@@ -2157,7 +2161,7 @@ class Image(Binary):
     :param int max_height: the maximum height of the image (default: ``0``, no limit)
     :param bool verify_resolution: whether the image resolution should be verified
         to ensure it doesn't go over the maximum image resolution (default: ``True``).
-        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``45e6``).
+        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``50e6``).
 
     .. note::
 
@@ -3555,7 +3559,7 @@ class Many2many(_RelationalMulti):
 
         # determine old and new relation {x: ys}
         set = OrderedSet
-        ids = {rid for recs, cs in records_commands_list for rid in recs.ids}
+        ids = set(rid for recs, cs in records_commands_list for rid in recs.ids)
         records = model.browse(ids)
 
         if self.store:

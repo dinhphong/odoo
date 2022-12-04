@@ -16,10 +16,10 @@
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2020
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Martin Trigaux, 2020
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2020
 # BigBlu <paolo.moroni@air-srl.com>, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Martin Trigaux, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
@@ -34,7 +34,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website
 #. openerp-web
@@ -2405,6 +2405,7 @@ msgstr "Il conto alla rovescia è terminato - Fuochi d'artificio"
 #. module: website
 #: code:addons/website/models/website.py:0
 #: model:ir.filters,name:website.dynamic_snippet_country_filter
+#: model:website.snippet.filter,name:website.dynamic_snippet_data_source_country
 #, python-format
 msgid "Countries"
 msgstr "Nazioni"
@@ -5312,7 +5313,7 @@ msgstr "Sito web multiplo"
 #: model_terms:ir.ui.view,arch_db:website.option_header_brand_name
 #: model_terms:ir.ui.view,arch_db:website.option_header_off_canvas
 msgid "My Website"
-msgstr "Sito web personale"
+msgstr "Il mio sito web"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_centered
@@ -7443,6 +7444,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "This page"
 msgstr "Questa pagina"
+
+#. module: website
+#: code:addons/website/models/website_visitor.py:0
+#, python-format
+msgid "This operator is not supported"
+msgstr "L'operatore non è supportato"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404

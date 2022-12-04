@@ -18,6 +18,7 @@
 # Noma Yuki, 2021
 # Abe Tomohiro <tomohiro@quartile.co>, 2021
 # Nankyung Yoon <n.yoon@glavisarchitects.com>, 2022
+# 江口和志 <sandwhale1010@gmail.com>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
 # 
 msgid ""
@@ -2006,7 +2007,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Clean"
-msgstr ""
+msgstr "クリーニング"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -2032,7 +2033,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Click on"
-msgstr ""
+msgstr "右上の"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
@@ -2183,7 +2184,7 @@ msgstr "連絡先等"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_search_console
 msgid "Console Google Search"
-msgstr ""
+msgstr "Googleサーチコンソール"
 
 #. module: website
 #: model:ir.model,name:website.model_res_partner
@@ -2291,7 +2292,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.res_config_settings.xml:0
 #, python-format
 msgid "Cookie bars may significantly impair the experience"
-msgstr ""
+msgstr "クッキーバーは、訪問者の体験を著しく損なう可能性があります。"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_cookies_bar
@@ -2335,6 +2336,7 @@ msgstr ""
 #. module: website
 #: code:addons/website/models/website.py:0
 #: model:ir.filters,name:website.dynamic_snippet_country_filter
+#: model:website.snippet.filter,name:website.dynamic_snippet_data_source_country
 #, python-format
 msgid "Countries"
 msgstr "国"
@@ -2464,7 +2466,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_form
 msgid "Custom Code"
-msgstr ""
+msgstr "カスタムコード"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2905,7 +2907,7 @@ msgstr "ユーザがこのドメインを訪問する際にこのウェブサイ
 #: code:addons/website/static/src/js/backend/res_config_settings.js:0
 #, python-format
 msgid "Do not activate"
-msgstr ""
+msgstr "有効化しない"
 
 #. module: website
 #. openerp-web
@@ -3510,7 +3512,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Force your user to create an account per website"
-msgstr "ウェブサイトに基づいてアカウントを作成させる"
+msgstr "ユーザにウェブサイト毎にアカウントを作成させる"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -3713,7 +3715,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Google Map"
-msgstr ""
+msgstr "グーグルマップ"
 
 #. module: website
 #. openerp-web
@@ -3739,6 +3741,18 @@ msgstr "GoogleマップAPIキー"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,field_description:website.field_website__google_search_console
 msgid "Google Search Console"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Google deprecated both its \"Universal Analytics\" and \"Google Sign-In\" "
+"API. It means that only accounts and keys created before 2020 will be able "
+"to integrate their Analytics dashboard in Odoo (or any other website). This "
+"will be possible only up to mid 2023. After that, those services won't work "
+"anymore, at all."
 msgstr ""
 
 #. module: website
@@ -3848,7 +3862,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Hamburger menu"
-msgstr ""
+msgstr "ハンバーガーメニュー"
 
 #. module: website
 #. openerp-web
@@ -4139,7 +4153,7 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_website__social_default_image
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "If set, replaces the website logo as the default social share image."
-msgstr ""
+msgstr "設定すると、Webサイトのロゴがデフォルトのソーシャル共有画像として置き換えられます。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -4174,7 +4188,7 @@ msgstr ""
 msgid ""
 "If you discard the current edits, all unsaved changes will be lost. You can "
 "cancel to return to edit mode."
-msgstr ""
+msgstr "現在の編集を破棄した場合、未保存の全ての変更が失われます。編集モードに戻るにはキャンセルしてください。"
 
 #. module: website
 #. openerp-web
@@ -4709,7 +4723,7 @@ msgstr "レイアウト"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Layout Background"
-msgstr ""
+msgstr "レイアウト背景"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -5038,6 +5052,13 @@ msgid "Middle"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Min-Height"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Minimalist"
@@ -5098,7 +5119,7 @@ msgstr "モジュール"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Monitor Google Search results data"
-msgstr ""
+msgstr "Google検索結果データのモニタリング"
 
 #. module: website
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_0
@@ -5222,6 +5243,15 @@ msgstr "新規"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"New Google Analytics accounts and keys are now using Google Analytics 4 "
+"which, for now, can't be integrated/embed in external websites."
+msgstr ""
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/menu/new_content.js:0
 #, python-format
 msgid "New Page"
@@ -5339,7 +5369,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
 msgid "Not published"
-msgstr ""
+msgstr "非公開"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
@@ -5361,7 +5391,7 @@ msgstr "注：このページを非表示にするには、上部の「カスタ
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Nothing"
-msgstr ""
+msgstr "なし"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_language_count
@@ -5405,7 +5435,7 @@ msgstr "今後このメッセージを表示しない"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "On Click"
-msgstr ""
+msgstr "クリック時"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -5741,7 +5771,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Pills"
-msgstr ""
+msgstr "ボタン"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -5753,7 +5783,7 @@ msgstr ""
 #: code:addons/website/static/src/js/backend/res_config_settings.js:0
 #, python-format
 msgid "Please confirm"
-msgstr ""
+msgstr "ご確認ください"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -6072,7 +6102,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
 msgid "Remove theme"
-msgstr ""
+msgstr "テーマを削除"
 
 #. module: website
 #. openerp-web
@@ -6397,7 +6427,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Select a website to load its settings."
-msgstr ""
+msgstr "設定をロードするには、ウェブサイトを選択してください。"
 
 #. module: website
 #. openerp-web
@@ -6636,7 +6666,7 @@ msgstr "スライドショー"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Slogan"
-msgstr ""
+msgstr "スローガン"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -6837,7 +6867,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Submit sitemap to Google"
-msgstr ""
+msgstr "Googleにサイトマップを送信する"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -7252,6 +7282,12 @@ msgid "This page"
 msgstr ""
 
 #. module: website
+#: code:addons/website/models/website_visitor.py:0
+#, python-format
+msgid "This operator is not supported"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
 msgid ""
 "This page does not exist, but you can create it as you are administrator of "
@@ -7276,6 +7312,15 @@ msgstr ""
 msgid ""
 "This value will be escaped to be compliant with all major browsers and used "
 "in url. Keep it empty to use the default name of the record."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Those accounts should now check their Analytics dashboard in the Google "
+"platform directly."
 msgstr ""
 
 #. module: website
@@ -7314,19 +7359,19 @@ msgstr "タイムゾーン"
 #: model:digest.tip,name:website.digest_tip_website_0
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_0
 msgid "Tip: Engage with visitors to convert them into leads"
-msgstr ""
+msgstr "ヒント：訪問者と関わり、リードに転換させる"
 
 #. module: website
 #: model:digest.tip,name:website.digest_tip_website_2
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_2
 msgid "Tip: Search Engine Optimization (SEO)"
-msgstr ""
+msgstr "ヒント：検索エンジン最適化(SEO)"
 
 #. module: website
 #: model:digest.tip,name:website.digest_tip_website_1
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_1
 msgid "Tip: Use royalty-free photos"
-msgstr ""
+msgstr "ヒント：ロイヤリティフリーの写真を使用する"
 
 #. module: website
 #. openerp-web
@@ -7395,7 +7440,7 @@ msgstr "ツールチップ"
 #: model_terms:ir.ui.view,arch_db:website.s_share_options
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
 msgid "Top"
-msgstr ""
+msgstr "上"
 
 #. module: website
 #. openerp-web
@@ -7494,7 +7539,7 @@ msgstr "翻訳情報"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Tuna and Salmon Burger"
-msgstr ""
+msgstr "ツナとサーモンのバーガー"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -7632,7 +7677,7 @@ msgstr "未公開"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
 msgid "Update theme"
-msgstr ""
+msgstr "テーマを更新"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_attachment__url
@@ -7996,7 +8041,7 @@ msgstr "訪問数"
 #: model_terms:ir.actions.act_window,help:website.website_visitor_view_action
 msgid ""
 "Wait for visitors to come to your website to see the pages they viewed."
-msgstr ""
+msgstr "訪問者が閲覧したページを確認するためには、訪問者がウェブサイトに来るのを待ちましょう。"
 
 #. module: website
 #: model_terms:ir.actions.act_window,help:website.website_visitors_action
@@ -8806,7 +8851,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "in the top right corner to start designing."
-msgstr ""
+msgstr "ボタンをクリックしてデザインを始めましょう。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
@@ -8870,7 +8915,7 @@ msgid ""
 "            your visitors. We recommend you avoid them unless you have\n"
 "            verified with a legal advisor that you absolutely need cookie\n"
 "            consent in your country."
-msgstr ""
+msgstr "あなたの国でクッキーの同意が絶対に必要であることを法律顧問に確認した場合を除き、これらを避けることをお勧めします。"
 
 #. module: website
 #. openerp-web
@@ -8989,7 +9034,7 @@ msgstr "はい"
 #: code:addons/website/static/src/xml/website.res_config_settings.xml:0
 #, python-format
 msgid "you do not need to ask for the consent"
-msgstr ""
+msgstr "同意を求める必要はありません"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
@@ -9119,4 +9164,11 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Width"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "└ Height"
 msgstr ""

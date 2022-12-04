@@ -452,7 +452,7 @@ class SaleOrder(models.Model):
             # Block if partner only has warning but parent company is blocked
             if partner.sale_warn != 'block' and partner.parent_id and partner.parent_id.sale_warn == 'block':
                 partner = partner.parent_id
-            title = ("Warning for %s") % partner.name
+            title = _("Warning for %s") % partner.name
             message = partner.sale_warn_msg
             warning = {
                     'title': title,
@@ -593,7 +593,7 @@ class SaleOrder(models.Model):
             'partner_id': self.partner_invoice_id.id,
             'partner_shipping_id': self.partner_shipping_id.id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id.get_fiscal_position(self.partner_invoice_id.id)).id,
-            'partner_bank_id': self.company_id.partner_id.bank_ids[:1].id,
+            'partner_bank_id': self.company_id.partner_id.bank_ids.filtered(lambda bank: bank.company_id.id in (self.company_id.id, False))[:1].id,
             'journal_id': journal.id,  # company comes from the journal
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
@@ -839,6 +839,7 @@ Reason(s) of this behavior could be:
         return False
 
     def _find_mail_template(self, force_confirmation_template=False):
+        self.ensure_one()
         template_id = False
 
         if force_confirmation_template or (self.state == 'sale' and not self.env.context.get('proforma', False)):
@@ -899,9 +900,9 @@ Reason(s) of this behavior could be:
         if self.env.su:
             # sending mail in sudo was meant for it being sent from superuser
             self = self.with_user(SUPERUSER_ID)
-        template_id = self._find_mail_template(force_confirmation_template=True)
-        if template_id:
-            for order in self:
+        for order in self:
+            template_id = order._find_mail_template(force_confirmation_template=True)
+            if template_id:
                 order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', email_layout_xmlid="mail.mail_notification_paynow")
 
     def action_done(self):
@@ -1105,10 +1106,10 @@ Reason(s) of this behavior could be:
                 line.qty_to_invoice = 0
 
     def payment_action_capture(self):
-        self.authorized_transaction_ids.s2s_capture_transaction()
+        self.authorized_transaction_ids.action_capture()
 
     def payment_action_void(self):
-        self.authorized_transaction_ids.s2s_void_transaction()
+        self.authorized_transaction_ids.action_void()
 
     def get_portal_last_transaction(self):
         self.ensure_one()
@@ -1138,6 +1139,7 @@ Reason(s) of this behavior could be:
 
         :param optional_values: any parameter that should be added to the returned down payment section
         """
+        context = {'lang': self.partner_id.lang}
         down_payments_section_line = {
             'display_type': 'line_section',
             'name': _('Down Payments'),
@@ -1148,6 +1150,7 @@ Reason(s) of this behavior could be:
             'price_unit': 0,
             'account_id': False
         }
+        del context
         if optional_values:
             down_payments_section_line.update(optional_values)
         return down_payments_section_line
@@ -1186,6 +1189,7 @@ class SaleOrderLine(models.Model):
             elif not float_is_zero(line.qty_to_invoice, precision_digits=precision):
                 line.invoice_status = 'to invoice'
             elif line.state == 'sale' and line.product_id.invoice_policy == 'order' and\
+                    line.product_uom_qty >= 0.0 and\
                     float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 1:
                 line.invoice_status = 'upselling'
             elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) >= 0:
@@ -1610,7 +1614,7 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id', 'order_id.date_order', 'order_id.partner_id')
     def _compute_analytic_tag_ids(self):
         for line in self:
-            if not line.analytic_tag_ids:
+            if not line.display_type and line.state == 'draft':
                 default_analytic_account = line.env['account.analytic.default'].sudo().account_get(
                     product_id=line.product_id.id,
                     partner_id=line.order_id.partner_id.id,
@@ -1650,7 +1654,7 @@ class SaleOrderLine(models.Model):
             'discount': self.discount,
             'price_unit': self.price_unit,
             'tax_ids': [(6, 0, self.tax_id.ids)],
-            'analytic_account_id': self.order_id.analytic_account_id.id,
+            'analytic_account_id': self.order_id.analytic_account_id.id if not self.display_type else False,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'sale_line_ids': [(4, self.id)],
         }
@@ -1719,8 +1723,9 @@ class SaleOrderLine(models.Model):
             vals['product_uom'] = self.product_id.uom_id
             vals['product_uom_qty'] = self.product_uom_qty or 1.0
 
+        lang = get_lang(self.env, self.order_id.partner_id.lang).code
         product = self.product_id.with_context(
-            lang=get_lang(self.env, self.order_id.partner_id.lang).code,
+            lang=lang,
             partner=self.order_id.partner_id,
             quantity=vals.get('product_uom_qty') or self.product_uom_qty,
             date=self.order_id.date_order,
@@ -1728,7 +1733,7 @@ class SaleOrderLine(models.Model):
             uom=self.product_uom.id
         )
 
-        vals.update(name=self.get_sale_order_line_multiline_description_sale(product))
+        vals.update(name=self.with_context(lang=lang).get_sale_order_line_multiline_description_sale(product))
 
         self._compute_tax_id()
 
@@ -1809,10 +1814,11 @@ class SaleOrderLine(models.Model):
 
         Lines cannot be deleted if the order is confirmed; downpayment
         lines who have not yet been invoiced bypass that exception.
+        Also, allow deleting UX lines (notes/sections).
         :rtype: recordset sale.order.line
         :returns: set of lines that cannot be deleted
         """
-        return self.filtered(lambda line: line.state in ('sale', 'done') and (line.invoice_lines or not line.is_downpayment))
+        return self.filtered(lambda line: line.state in ('sale', 'done') and (line.invoice_lines or not line.is_downpayment) and not line.display_type)
 
     def unlink(self):
         if self._check_line_unlink():
@@ -1942,12 +1948,12 @@ class SaleOrderLine(models.Model):
         # display the no_variant attributes, except those that are also
         # displayed by a custom (avoid duplicate description)
         for ptav in (no_variant_ptavs - custom_ptavs):
-            name += "\n" + ptav.with_context(lang=self.order_id.partner_id.lang).display_name
+            name += "\n" + ptav.display_name
 
         # Sort the values according to _order settings, because it doesn't work for virtual records in onchange
         custom_values = sorted(self.product_custom_attribute_value_ids, key=lambda r: (r.custom_product_template_attribute_value_id.id, r.id))
         # display the is_custom values
         for pacv in custom_values:
-            name += "\n" + pacv.with_context(lang=self.order_id.partner_id.lang).display_name
+            name += "\n" + pacv.display_name
 
         return name

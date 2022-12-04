@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Léonie Bouchat <lbo@odoo.com>, 2021
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-19 09:43+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: auth_totp
 #: code:addons/auth_totp/controllers/home.py:0
@@ -236,12 +236,12 @@ msgid ""
 "                                If you cannot scan the barcode, here are some alternative options:"
 msgstr ""
 "Scansiona l'immagine qui sotto con l'app authenticator sul tuo telefono.<br/>\n"
-"Se non puoi scansionare il barcode, ecco alcune opzioni alternative:"
+"Se non puoi scansionare il codice a barre, ecco alcune opzioni alternative:"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Scan this barcode with your app"
-msgstr "Leggi il barcode con la tua applicazione"
+msgstr "Leggi il codice con l'applicazione"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__secret
